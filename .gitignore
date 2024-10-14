@@ -68,7 +68,6 @@ publish/
 # Docker files
 .docker/
 docker-compose.override.yml
-docker-compose.*
 
 # Python environment
 env/
