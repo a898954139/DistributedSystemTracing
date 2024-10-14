@@ -1,0 +1,108 @@
+# Containers
+./containers/
+
+# Build Folders
+bin/
+obj/
+
+# Rider / JetBrains IDE
+.idea/
+.idea_modules/
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf/
+.idea/**/assets/
+.idea/.idea-name
+.idea/workspace.xml
+.idea/.idea-data.json
+.idea/.idea_configurations.xml
+
+# VS Code
+.vscode/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+
+# Visual Studio
+.vs/
+.vscode/
+
+# Crash Reports
+CrashReports/
+
+# Auto-generated files
+*.generated.cs
+*.designer.cs
+Generated_Code/
+
+# Package Folders
+packages/
+.vscode/
+*.nupkg
+*.snupkg
+
+# Distribution Folders
+dist/
+build/
+releases/
+artifacts/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Node modules
+node_modules/
+
+# Publish output
+publish/
+
+# Docker files
+.docker/
+docker-compose.override.yml
+docker-compose.*
+
+# Python environment
+env/
+venv/
+
+# Ignore temporary files
+*.tmp
+*.temp
+~$*
+
+# NuGet
+project.lock.json
+project.fragment.lock.json
+artifacts/
+*.nuget.props
+*.nuget.targets
+**/Nupkg/*.nupkg
+
+# Resharper files
+_ReSharper.Caches/
+*.DotSettings.user
+resharper.xml
+_Resharper.*
+TestResults/
+
+# Ignore the compiled assembly outputs
+*.dll
+*.pdb
+*.exe
+
+# Rider settings
+.idea/
+*.sln.iml
+
+# macOS specific
+.DS_Store
+.containers
