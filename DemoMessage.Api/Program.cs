@@ -1,3 +1,8 @@
+using Elastic.Channels;
+using Elastic.CommonSchema.Serilog;
+using Elastic.Ingest.Elasticsearch;
+using Elastic.Ingest.Elasticsearch.DataStreams;
+using Elastic.Serilog.Sinks;
 using MassTransit;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -9,7 +14,22 @@ var builder = WebApplication.CreateBuilder(args);
 // Seq appsettings logging configure
 builder.Host.UseSerilog((context, configuration) =>
 {
-    configuration.ReadFrom.Configuration(context.Configuration);
+    configuration.ReadFrom.Configuration(context.Configuration)
+        .Enrich.FromLogContext()
+        .WriteTo.Elasticsearch(
+            [new Uri(builder.Configuration["ElasticConfiguration:Uri"])],
+            options =>
+            {
+                options.DataStream = new DataStreamName("logs", "demo");
+                options.BootstrapMethod = BootstrapMethod.Failure;
+                options.ConfigureChannel = channelOptions =>
+                {
+                    channelOptions.BufferOptions = new BufferOptions
+                    {
+                        ExportMaxConcurrency = 10
+                    };
+                };
+            });
 });
 
 // Add services to the container.

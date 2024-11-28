@@ -36,3 +36,9 @@
       - ACCEPT_EULA=Y
     ports:
       - "5341:80"
+
+  sampleelasticsearch:
+    image: sampleelasticsearch
+    build:
+      context: .
+      dockerfile: SampleElasticSearch/Dockerfile

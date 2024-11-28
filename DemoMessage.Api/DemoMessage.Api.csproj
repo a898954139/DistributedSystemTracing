@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Elastic.Serilog.Sinks" Version="8.12.2" />
         <PackageReference Include="MassTransit" Version="8.2.6-develop.2054" />
         <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.6-develop.2054" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.5"/>
