@@ -1,45 +1,22 @@
-using Elastic.Channels;
-using Elastic.CommonSchema.Serilog;
-using Elastic.Ingest.Elasticsearch;
-using Elastic.Ingest.Elasticsearch.DataStreams;
-using Elastic.Serilog.Sinks;
+using DemoMessage.Consumers.Consumer;
 using MassTransit;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using Producer.EventBus;
-using Producer.Publisher;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Seq appsettings logging configure
 builder.Host.UseSerilog((context, configuration) =>
 {
-    configuration.ReadFrom.Configuration(context.Configuration)
-        .Enrich.FromLogContext()
-        .WriteTo.Elasticsearch(
-            [new Uri(builder.Configuration["ElasticConfiguration:Uri"])],
-            options =>
-            {
-                options.DataStream = new DataStreamName("logs", "demo");
-                options.BootstrapMethod = BootstrapMethod.Failure;
-                options.ConfigureChannel = channelOptions =>
-                {
-                    channelOptions.BufferOptions = new BufferOptions
-                    {
-                        ExportMaxConcurrency = 10
-                    };
-                };
-            });
+    configuration.ReadFrom.Configuration(context.Configuration);
 });
-
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 var service = builder.Services;
+service.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 service.AddEndpointsApiExplorer();
 service.AddSwaggerGen();
 
-service.AddTransient<IEventBus, EventBus>();
 service.AddMassTransit(x =>
 {
     x.SetKebabCaseEndpointNameFormatter();
@@ -53,13 +30,18 @@ service.AddMassTransit(x =>
             h.Username(builder.Configuration["MessageBroker:Username"]!);
             h.Password(builder.Configuration["MessageBroker:Password"]!);
         });
+        
+        configurator.ReceiveEndpoint("test", e =>
+        {
+            e.ConfigureConsumer<DemoMessageConsumer>(context);
+        });
     });
 });
 
 service.AddOpenTelemetry()
     .ConfigureResource(resource => 
         resource.AddService(
-            serviceName: "Publisher", 
+            serviceName: "Consumer", 
             serviceVersion: "1.0.0.0"))
     .WithTracing(tracing =>
     {
@@ -71,9 +53,8 @@ service.AddOpenTelemetry()
         tracing.AddOtlpExporter();
     });
 
-
-service.AddHostedService<Worker>();
 var app = builder.Build();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -82,5 +63,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();

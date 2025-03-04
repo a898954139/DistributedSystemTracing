@@ -1,9 +1,9 @@
 using Contract;
-using MassTransit;
+using Producer.EventBus;
 
 namespace Producer.Publisher;
 
-public class Worker(IBus bus, ILogger<Worker> logger) : BackgroundService
+public class Worker(IEventBus bus, ILogger<Worker> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -14,10 +14,10 @@ public class Worker(IBus bus, ILogger<Worker> logger) : BackgroundService
                 Value = $"The current time is {DateTime.UtcNow}"
             };
             
-            await bus.Publish(text, stoppingToken);
+            await bus.SendAsync("test", text, stoppingToken);
             
             logger.LogInformation("Published message: {@Text}", text);
-            await Task.Delay(10_000, stoppingToken);
+            await Task.Delay(1000, stoppingToken);
         }
     }
 }

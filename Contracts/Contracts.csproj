@@ -7,4 +7,8 @@
         <RootNamespace>Contract</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
+    </ItemGroup>
+
 </Project>

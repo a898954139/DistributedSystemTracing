@@ -6,14 +6,27 @@
       context: .
       dockerfile: DemoMessage.Api/Dockerfile
     environment:
-      - RABBITMQ__HOST=amqp://rabbitmq:5672
       - RABBITMQ__Username=guest
       - RABBITMQ__Password=guest
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
       - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
     ports:
       - "5000:8080"
-      
+  
+  demomessage.consumers:
+    image: ${DOCKER_REGISTRY-}demomessage.consumers
+    container_name: demomessage.consumers
+    build:
+      context: .
+      dockerfile: DemoMessage.Consumers/Dockerfile
+    environment:
+      - RABBITMQ__Username=guest
+      - RABBITMQ__Password=guest
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
+      - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+    ports:
+      - "5001:8080"
+  
   rabbitmq:
     image: rabbitmq:management
     container_name: rabbitmq
